@@ -1,4 +1,4 @@
-scalaVersion in ThisBuild := Settings.Versions.scala
+scalaVersion in ThisBuild := Versions.scala
 
 def mkProject(name: String, path: File): Project = (
   Project(name, path)
@@ -6,3 +6,9 @@ def mkProject(name: String, path: File): Project = (
 )
 
 lazy val typesOfTypes = mkProject("typesOfTypes", file("types_of_types"))
+
+lazy val conScalaz = mkProject("conScalaz", file("."))
+  .settings(
+  libraryDependencies += Dependencies.scalaz,
+  initialCommands in console := "import scalaz._; import Scalaz._"
+)
