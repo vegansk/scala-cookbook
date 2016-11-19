@@ -10,5 +10,7 @@ lazy val typesOfTypes = mkProject("typesOfTypes", file("types_of_types"))
 lazy val conScalaz = mkProject("conScalaz", file("."))
   .settings(
   libraryDependencies += Dependencies.scalaz,
-  initialCommands in console := "import scalaz._; import Scalaz._"
+  initialCommands in console := """
+import scalaz._
+import Scalaz._"""
 )
