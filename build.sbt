@@ -14,5 +14,14 @@ lazy val conScalaz = mkProject("conScalaz", file("."))
   libraryDependencies += Dependencies.scalaz,
   initialCommands in console := """
 import scalaz._
-import Scalaz._"""
+import Scalaz._
+"""
+)
+
+lazy val conScalaMeta = mkProject("conScalaMeta", file("."))
+  .settings(
+  libraryDependencies += Dependencies.scalaMeta,
+  initialCommands in console := """
+import scala.meta._
+"""
 )
