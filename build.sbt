@@ -7,6 +7,8 @@ def mkProject(name: String, path: File): Project = (
 
 lazy val typesOfTypes = mkProject("typesOfTypes", file("types_of_types"))
 
+lazy val examples = mkProject("examples", file("examples"))
+
 lazy val conScalaz = mkProject("conScalaz", file("."))
   .settings(
   libraryDependencies += Dependencies.scalaz,
