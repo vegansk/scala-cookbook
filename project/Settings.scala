@@ -24,5 +24,13 @@ object Settings {
     scalaVersion := Versions.scala
   )
 
+  lazy val macros = Seq(
+    resolvers += Resolver.url(
+      "scalameta",
+      url("http://dl.bintray.com/scalameta/maven"))(Resolver.ivyStylePatterns),
+    addCompilerPlugin(
+      "org.scalameta" % "paradise" % "3.0.0.132" cross CrossVersion.full),
+    scalacOptions += "-Xplugin-require:macroparadise"
+  )
 }
 

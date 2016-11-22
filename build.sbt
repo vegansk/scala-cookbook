@@ -10,7 +10,7 @@ lazy val typesOfTypes = mkProject("typesOfTypes", file("types_of_types"))
 lazy val examples = mkProject("examples", file("examples"))
   .settings(
   libraryDependencies += Dependencies.scalaMeta
-)
+).settings(Settings.macros)
 
 lazy val conScalaz = mkProject("conScalaz", file("consoles") / "scalaz")
   .settings(
