@@ -11,6 +11,7 @@ object Versions {
 object Dependencies {
   lazy val scalaz = "org.scalaz" %% "scalaz-core" % Versions.scalaz
   lazy val scalaMeta = "org.scalameta" %% "scalameta" % Versions.scalaMeta
+  lazy val scalaReflect = "org.scala-lang" % "scala-reflect" % Versions.scala
 
   lazy val monocle = Seq(
     "com.github.julien-truffaut" %% "monocle-core" % Versions.monocle,
@@ -30,7 +31,9 @@ object Settings {
       url("http://dl.bintray.com/scalameta/maven"))(Resolver.ivyStylePatterns),
     addCompilerPlugin(
       "org.scalameta" % "paradise" % "3.0.0.132" cross CrossVersion.full),
-    scalacOptions += "-Xplugin-require:macroparadise"
+    scalacOptions += "-Xplugin-require:macroparadise",
+    libraryDependencies += Dependencies.scalaReflect
+
   )
 }
 

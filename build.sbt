@@ -38,3 +38,12 @@ import monocle._
 import monocle.macros._
 """
 )
+
+lazy val conMacros = mkProject("conMacros", file("consoles") / "macros")
+  .settings(
+  libraryDependencies += Dependencies.scalaReflect,
+  initialCommands in console := """
+import scala.language.experimental.macros
+import scala.reflect.runtime.{universe => u}
+"""
+)
