@@ -7,10 +7,18 @@ def mkProject(name: String, path: File): Project = (
 
 lazy val typesOfTypes = mkProject("typesOfTypes", file("types_of_types"))
 
-lazy val examples = mkProject("examples", file("examples"))
+lazy val examplesMacros = mkProject("examplesMacros", file("examples") / "macros")
   .settings(
   libraryDependencies += Dependencies.scalaMeta
-).settings(Settings.macros)
+)
+  .settings(Settings.macros)
+
+lazy val examples = mkProject("examples", file("examples") / "core")
+  .settings(
+  libraryDependencies += Dependencies.scalaMeta
+)
+  .settings(Settings.macros)
+  .dependsOn(examplesMacros)
 
 lazy val conScalaz = mkProject("conScalaz", file("consoles") / "scalaz")
   .settings(
@@ -24,8 +32,10 @@ import Scalaz._
 lazy val conScalaMeta = mkProject("conScalaMeta", file("consoles") / "scalameta")
   .settings(
   libraryDependencies += Dependencies.scalaMeta,
+  libraryDependencies += Dependencies.pprint,
   initialCommands in console := """
 import scala.meta._
+import pprint._
 """
 )
 
@@ -42,8 +52,11 @@ import monocle.macros._
 lazy val conMacros = mkProject("conMacros", file("consoles") / "macros")
   .settings(
   libraryDependencies += Dependencies.scalaReflect,
+  libraryDependencies += Dependencies.pprint,
   initialCommands in console := """
 import scala.language.experimental.macros
-import scala.reflect.runtime.{universe => u}
+import scala.reflect.runtime.universe
+import universe._
+import pprint._
 """
 )

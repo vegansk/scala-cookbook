@@ -12,6 +12,7 @@ object Dependencies {
   lazy val scalaz = "org.scalaz" %% "scalaz-core" % Versions.scalaz
   lazy val scalaMeta = "org.scalameta" %% "scalameta" % Versions.scalaMeta
   lazy val scalaReflect = "org.scala-lang" % "scala-reflect" % Versions.scala
+  lazy val pprint = "com.lihaoyi" %% "pprint" % "0.4.3"
 
   lazy val monocle = Seq(
     "com.github.julien-truffaut" %% "monocle-core" % Versions.monocle,

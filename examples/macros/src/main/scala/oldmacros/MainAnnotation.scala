@@ -12,6 +12,11 @@ class Main extends scala.annotation.StaticAnnotation {
 object MainImpl {
   def mainImpl(c: Context)(defn: c.Expr[Any]): c.Expr[Unit] = {
     import c.universe._
-    reify(())
+
+    val q"object $name { $body }" = defn.tree
+
+    val main = q"def main(args: Array[String]): Unit = { $body }"
+
+    c.Expr[Unit](q"object $name { $main }")
   }
 }
