@@ -5,18 +5,24 @@ import scala.reflect.macros.Context
 
 class Main extends scala.annotation.StaticAnnotation {
 
-  def apply(defn: Any): Any = macro MainImpl.mainImpl
+  def macroTransform(annottees: Any*): Any = macro MainImpl.mainImpl
 
 }
 
 object MainImpl {
-  def mainImpl(c: Context)(defn: c.Expr[Any]): c.Expr[Unit] = {
+  def mainImpl(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
     import c.universe._
 
-    val q"object $name { $body }" = defn.tree
+    val inputs = annottees.map(_.tree).toList
 
-    val main = q"def main(args: Array[String]): Unit = { $body }"
+    val res: List[Tree] = inputs match {
+      case q"object $name { $body }" :: rest => {
+        val main = q"def main(args: Array[String]): Unit = { $body }"
+        q"object $name { $main }" :: rest
+      }
+      case _ => inputs
+    }
 
-    c.Expr[Unit](q"object $name { $main }")
+    c.Expr[Any](q"..$res")
   }
 }

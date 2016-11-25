@@ -1,6 +1,7 @@
 package oldmacros
 
-object MainApp extends App {
+@Main
+object MainApp {
 
   Printf.printf("Test")
 }
