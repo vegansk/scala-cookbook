@@ -2,6 +2,5 @@ package oldmacros
 
 @Main
 object MainApp {
-
-  Printf.printf("Test")
+  Printf.printf("Test\n")
 }
