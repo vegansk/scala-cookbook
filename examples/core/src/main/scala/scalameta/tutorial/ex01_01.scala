@@ -18,14 +18,14 @@ object BalancedSuite extends App {
 
     tokens.foreach(
       _ match {
-        case v@(LeftParen() | LeftBrace() | LeftBracket()) =>
+        case v @ (LeftParen() | LeftBrace() | LeftBracket()) =>
           stack = v :: stack
-        case v@(RightParen() | RightBrace() | RightBracket()) =>
+        case v @ (RightParen() | RightBrace() | RightBracket()) =>
           stack match {
             case Nil => balanced = false
-            case x::xs => {
+            case x :: xs => {
               stack = xs
-              if(!isMatch(x, v))
+              if (!isMatch(x, v))
                 balanced = false
             }
           }

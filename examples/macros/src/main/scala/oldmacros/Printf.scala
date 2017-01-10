@@ -25,14 +25,14 @@ object PrintfImpl {
       )
     }
 
-    val paramStack = Stack[Tree](args.map(_.tree):_*)
+    val paramStack = Stack[Tree](args.map(_.tree): _*)
 
     val (defsO, parts) = (formatS.split("(?<=%[\\w%])|(?=%[\\w%])") map {
       case "%d" => mkValDef(paramStack.pop(), typeOf[Int])
       case "%s" => mkValDef(paramStack.pop(), typeOf[String])
       case "%%" => (None, Literal(Constant("%")))
       case other => (None, Literal(Constant(other)))
-    }).map(_ match { case (d, p) => (d, q"print($p)")}).unzip
+    }).map(_ match { case (d, p) => (d, q"print($p)") }).unzip
 
     val defs = defsO.flatMap(_.toList)
 
