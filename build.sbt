@@ -51,6 +51,7 @@ import monocle.macros._
 
 lazy val conMacros = mkProject("conMacros", file("consoles") / "macros")
   .settings(
+  scalacOptions += "-Yreify-copypaste",
   libraryDependencies += Dependencies.scalaReflect,
   libraryDependencies += Dependencies.pprint,
   initialCommands in console := """
