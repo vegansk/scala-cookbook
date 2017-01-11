@@ -1,3 +1,11 @@
 var webpack = require('webpack');
+var path = require('path');
+var rootDir = path.dirname(path.dirname(path.dirname(path.dirname(__dirname))));
+var paths = require(path.join(rootDir, 'config', 'paths.js'));
 
-module.exports = require('./scalajs.webpack.config');
+var cfg = require('./scalajs.webpack.config');
+
+cfg.output.path = paths.jsDir(true);
+cfg.output.filename = 'index.js';
+
+module.exports = cfg;
