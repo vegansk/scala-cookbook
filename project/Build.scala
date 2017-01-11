@@ -3,6 +3,7 @@ import Keys._
 import org.scalajs.sbtplugin.ScalaJSPlugin
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin
+import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport._
 
 object Cookbook {
 
@@ -51,6 +52,9 @@ object Cookbook {
 
   def jsBundlerSettings: PC =
     _.enablePlugins(ScalaJSBundlerPlugin)
+    .settings(
+      enableReloadWorkflow := false
+    )
 
   object Projects {
 
@@ -69,6 +73,10 @@ object Cookbook {
 
     lazy val jsBundlerTest = project.in(file("scalajs") / "bundler-test")
       .configure(commonSettings, jsBundlerSettings)
+      .settings(
+        webpackConfigFile in fastOptJS := Some(baseDirectory.value / "config" / "dev.webpack.config.js"),
+        webpackConfigFile in fullOptJS := Some(baseDirectory.value / "config" / "prod.webpack.config.js")
+      )
   }
 
   object Consoles {
