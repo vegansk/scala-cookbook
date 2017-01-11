@@ -2,6 +2,7 @@ import sbt._
 import Keys._
 import org.scalajs.sbtplugin.ScalaJSPlugin
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
+import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin
 
 object Cookbook {
 
@@ -48,6 +49,9 @@ object Cookbook {
   def scalajsSettings: PC =
     _.enablePlugins(ScalaJSPlugin)
 
+  def jsBundlerSettings: PC =
+    _.enablePlugins(ScalaJSBundlerPlugin)
+
   object Projects {
 
     lazy val root = project.in(file("."))
@@ -64,7 +68,7 @@ object Cookbook {
       .dependsOn(examplesMacros)
 
     lazy val jsBundlerTest = project.in(file("scalajs") / "bundler-test")
-      .configure(commonSettings, scalajsSettings)
+      .configure(commonSettings, jsBundlerSettings)
   }
 
   object Consoles {
