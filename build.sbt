@@ -8,6 +8,7 @@ val root = Projects.root
 val typesOfTypes = Projects.typesOfTypes
 val examplesMacros = Projects.examplesMacros
 val examplesCore = Projects.examplesCore
+val jsBundlerTest = Projects.jsBundlerTest
 
 // Consoles
 
