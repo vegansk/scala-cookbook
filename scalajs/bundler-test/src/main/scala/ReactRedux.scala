@@ -11,27 +11,28 @@ object ReactRedux {
   object Impl {
 
     @js.native
-    trait ProviderProps[S, A] extends js.Object {
-      val store: Redux.Store[S, A] = js.native
+    trait ProviderProps extends js.Object {
+      val store: js.Any = js.native
     }
 
     object ProviderProps {
-      def apply[S, A](store: Redux.Store[S, A]): ProviderProps[S, A] =
+      def apply(store: js.Any): ProviderProps =
         js.Dynamic.literal(
           store = store
-        ).asInstanceOf[ProviderProps[S, A]]
+        ).asInstanceOf[ProviderProps]
     }
 
     @JSImport("react-redux", "Provider")
     @js.native
-    class Provider[S, A] extends JsComponentType[ProviderProps[S, A], js.Any, Element] {}
+    object Provider extends JsComponentType[ProviderProps, js.Any, Element]
+
   }
 
   object Provider {
 
-    def apply[S, A](store: Redux.Store[S, A])(children: ReactNode*) =
-      React.createFactory(new Impl.Provider[S, A]())(
-        Impl.ProviderProps(store), children
+    def apply[S, A](store: Redux.Store[S, A])(child: ReactNode) =
+      React.createFactory(Impl.Provider)(
+        Impl.ProviderProps(store), child
       )
 
   }
