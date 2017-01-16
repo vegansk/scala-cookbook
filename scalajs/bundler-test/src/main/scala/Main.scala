@@ -17,6 +17,49 @@ case object Increase extends Action;
 
 case object Decrease extends Action;
 
+object App {
+
+  object StateDisplay {
+
+    case class Props(counter: Int)
+
+    val component = ReactComponentB[Props]("StateDisplay")
+      .render_P { props =>
+        <.span()(s"Clicked: ${props.counter} times")
+      }
+      .build
+
+    def apply(counter: Int) = component(Props(counter))
+  }
+
+  object Button {
+
+    case class Props(value: String, onClick: () => Unit)
+
+    val component = ReactComponentB[Props]("Button")
+      .render_P { props =>
+        <.button(
+          ^.onClick --> Callback {
+            props.onClick()
+          }
+        )(props.value)
+      }
+      .build
+
+    def apply(value: String, onClick: () => Unit) = component(Props(value, onClick))
+
+  }
+
+  def apply(store: Redux.Store[State, Action]) =
+    <.div()(
+      StateDisplay(0),
+      <.br(),
+      Button("-", () => println("Minus")),
+      Button("+", () => println("Plus"))
+    )
+
+}
+
 object Main extends JSApp {
 
   def reducer(s: State, a: Action): State =
@@ -26,9 +69,6 @@ object Main extends JSApp {
       case Decrease =>
         s.copy(counter = s.counter - 1)
     }
-
-  def render =
-    <.p("Hello, world!")
 
   private object Dependencies {
 
@@ -52,7 +92,9 @@ object Main extends JSApp {
 
     val mountNode = dom.document.getElementById("root")
 
-    val _ = ReactDOM.render(render(), mountNode)
+    val store = Redux.createStore[State, Action](reducer _, State(0))
+
+    val _ = ReactDOM.render(App(store), mountNode)
 
   }
 
