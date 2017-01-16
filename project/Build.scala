@@ -16,7 +16,9 @@ object Cookbook {
 
   object JsVersions {
     val htmlWebpackPlugin = "~2.26.0"
-    val htmlLoader = "0.4.3"
+    val htmlLoader = "~0.4.3"
+
+    val redux = "~3.6.0"
   }
 
   object Dependencies {
@@ -85,6 +87,10 @@ object Cookbook {
         npmDevDependencies in Compile ++= Seq(
           "html-webpack-plugin" -> JsVersions.htmlWebpackPlugin,
           "html-loader" -> JsVersions.htmlLoader
+        ),
+
+        npmDependencies in Compile ++= Seq(
+          "redux" -> JsVersions.redux
         )
       )
   }
