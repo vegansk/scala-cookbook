@@ -51,11 +51,13 @@ object App {
   }
 
   def apply(store: Redux.Store[State, Action]) =
-    <.div()(
-      StateDisplay(0),
-      <.br(),
-      Button("-", () => println("Minus")),
-      Button("+", () => println("Plus"))
+    ReactRedux.Provider(store)(
+      <.div()(
+        StateDisplay(0),
+        <.br(),
+        Button("-", () => println("Minus")),
+        Button("+", () => println("Plus"))
+      )
     )
 
 }
