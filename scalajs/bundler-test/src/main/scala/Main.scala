@@ -3,6 +3,10 @@ import js.annotation._
 import scala.scalajs.js.JSApp
 import scala.scalajs.js.|
 
+import japgolly.scalajs.react._
+import org.scalajs.dom
+import japgolly.scalajs.react.vdom.prefix_<^._
+
 case class State(
   counter: Int
 )
@@ -23,21 +27,33 @@ object Main extends JSApp {
         s.copy(counter = s.counter - 1)
     }
 
+  def render =
+    <.p("Hello, world!")
+
+  private object Dependencies {
+
+    @JSImport("react", JSImport.Namespace)
+    @js.native
+    object React extends js.Object {}
+
+    @JSImport("react-dom", JSImport.Namespace)
+    @js.native
+    object ReactDOM extends js.Object {}
+
+    def setup = {
+      js.Dynamic.global.React = React
+      js.Dynamic.global.ReactDOM = ReactDOM
+    }
+  }
+
   def main(): Unit = {
-    println("Create the store...")
 
-    val store = Redux.createStore[State, Action](reducer _, State(0))
+    Dependencies.setup
 
-    println(s"Initial state is ${store.getState()}")
+    val mountNode = dom.document.getElementById("root")
 
-    store.dispatch(Redux.createAction(Increase))
+    val _ = ReactDOM.render(render(), mountNode)
 
-    println(s"The state after increase action is ${store.getState()}")
-
-    store.dispatch(Redux.createAction(Decrease))
-    store.dispatch(Redux.createAction(Decrease))
-
-    println(s"The state after two decrease actions is ${store.getState()}")
   }
 
 }

@@ -12,13 +12,17 @@ object Cookbook {
     val scalaz = "7.2.7"
     val scalaMeta = "1.3.0"
     val monocle = "1.3.2"
+
+    val scalaJsReact = "0.11.3"
   }
 
   object JsVersions {
     val htmlWebpackPlugin = "~2.26.0"
     val htmlLoader = "~0.4.3"
 
+    val react = "~15.4.2"
     val redux = "~3.6.0"
+    val reactRedux = "~5.0.2"
   }
 
   object Dependencies {
@@ -31,6 +35,8 @@ object Cookbook {
       "com.github.julien-truffaut" %% "monocle-core" % Versions.monocle,
       "com.github.julien-truffaut" %% "monocle-macro" % Versions.monocle
     )
+
+    lazy val scalaJsReact = "com.github.japgolly.scalajs-react" %%%! "core" % Versions.scalaJsReact
   }
 
   type PC = Project => Project
@@ -90,8 +96,13 @@ object Cookbook {
         ),
 
         npmDependencies in Compile ++= Seq(
-          "redux" -> JsVersions.redux
-        )
+          "react" -> JsVersions.react,
+          "react-dom" -> JsVersions.react,
+          "redux" -> JsVersions.redux,
+          "react-redux" -> JsVersions.reactRedux
+        ),
+
+        libraryDependencies += Dependencies.scalaJsReact
       )
   }
 
