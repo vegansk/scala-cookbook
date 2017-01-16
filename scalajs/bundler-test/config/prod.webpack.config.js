@@ -1,11 +1,10 @@
-var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 var path = require('path');
 var rootDir = path.dirname(path.dirname(path.dirname(path.dirname(__dirname))));
-var paths = require(path.join(rootDir, 'config', 'paths.js'));
+var common = require(path.join(rootDir, 'config', 'common.webpack.config.js'));
 
 var cfg = require('./scalajs.webpack.config');
 
-cfg.output.path = paths.jsDir(true);
-cfg.output.filename = 'index.js';
-
-module.exports = cfg;
+module.exports = common.doConfig(cfg, true, imports = {
+  HtmlWebpackPlugin: HtmlWebpackPlugin
+});
