@@ -14,6 +14,11 @@ object Cookbook {
     val monocle = "1.3.2"
   }
 
+  object JsVersions {
+    val htmlWebpackPlugin = "~2.26.0"
+    val htmlLoader = "0.4.3"
+  }
+
   object Dependencies {
     lazy val scalaz = "org.scalaz" %% "scalaz-core" % Versions.scalaz
     lazy val scalaMeta = "org.scalameta" %% "scalameta" % Versions.scalaMeta
@@ -75,7 +80,12 @@ object Cookbook {
       .configure(commonSettings, jsBundlerSettings)
       .settings(
         webpackConfigFile in fastOptJS := Some(baseDirectory.value / "config" / "dev.webpack.config.js"),
-        webpackConfigFile in fullOptJS := Some(baseDirectory.value / "config" / "prod.webpack.config.js")
+        webpackConfigFile in fullOptJS := Some(baseDirectory.value / "config" / "prod.webpack.config.js"),
+
+        npmDevDependencies in Compile ++= Seq(
+          "html-webpack-plugin" -> JsVersions.htmlWebpackPlugin,
+          "html-loader" -> JsVersions.htmlLoader
+        )
       )
   }
 
