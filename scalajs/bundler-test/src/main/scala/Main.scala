@@ -1,7 +1,6 @@
 import scala.scalajs.js
 import js.annotation._
 import scala.scalajs.js.JSApp
-import scala.scalajs.js.|
 
 import japgolly.scalajs.react._
 import org.scalajs.dom
@@ -31,9 +30,9 @@ object App {
 
     def apply(counter: Int) = component(Props(counter))
 
-    val cComponent = ReactRedux[State, Action, Props]((s, d) => Props(s.counter))(component)
+    val factory = React.createFactory(ReactRedux.connect((s: State, d: Redux.Dispatcher[Action]) => Props(s.counter))(component.reactClass))
 
-    def connected = cComponent(Props(0))
+    def connected(counter: Int) = factory(WrapObj(Props(counter)))
   }
 
   object Button {
@@ -57,7 +56,7 @@ object App {
   def apply(store: Redux.Store[State, Action]) =
     ReactRedux.Provider(store)(
       <.div()(
-        StateDisplay.connected,
+        StateDisplay.connected(0),
         <.br(),
         Button("-", () => println("Minus")),
         Button("+", () => println("Plus"))
@@ -98,7 +97,7 @@ object Main extends JSApp {
 
     val mountNode = dom.document.getElementById("root")
 
-    val store = Redux.createStore[State, Action](reducer _, State(0))
+    val store = Redux.createStore[State, Action](reducer _, State(1))
 
     val _ = ReactDOM.render(App(store), mountNode)
 
