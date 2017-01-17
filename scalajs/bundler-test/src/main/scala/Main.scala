@@ -30,6 +30,10 @@ object App {
       .build
 
     def apply(counter: Int) = component(Props(counter))
+
+    val cComponent = ReactRedux[State, Action, Props]((s, d) => Props(s.counter))(component)
+
+    def connected = cComponent(Props(0))
   }
 
   object Button {
@@ -53,7 +57,7 @@ object App {
   def apply(store: Redux.Store[State, Action]) =
     ReactRedux.Provider(store)(
       <.div()(
-        StateDisplay(0),
+        StateDisplay.connected,
         <.br(),
         Button("-", () => println("Minus")),
         Button("+", () => println("Plus"))
