@@ -64,4 +64,18 @@ object ReactRedux {
     val raw: RawConnector[S, P] = (s, d) => connector(s, (a: A) => d(Redux.createAction(a)))
     connectRaw(raw)(cls)
   }
+
+  trait ConnectedComponentFactory[Props, State, +Backend, +Node <: TopNode] {
+    def apply(props: Props, children: ReactNode*): ReactComponentU[Props, State, Backend, Node]
+  }
+
+  def createFactory[S, A, P, S1, B](connector: Connector[S, A, P])(cls: ReactClass[P, S1, B, Element]): ConnectedComponentFactory[P, S1, B, Element] =
+    new ConnectedComponentFactory[P, S1, B, Element] {
+      def apply(props: P, children: ReactNode*) = {
+        React.createFactory(
+          connect(connector)(cls)
+        )(WrapObj(props), children)
+      }
+    }
+
 }
