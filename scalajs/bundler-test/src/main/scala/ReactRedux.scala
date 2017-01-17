@@ -22,7 +22,7 @@ object ReactRedux {
         ).asInstanceOf[ProviderProps]
     }
 
-    type SelectorFactory[S, A, P] = js.Function2[Redux.Dispatcher[A], js.UndefOr[js.Any], js.Function2[S, WrapObj[P], WrapObj[P]]]
+    type SelectorFactory[S, A, P] = js.Function2[Redux.Dispatcher[Redux.WrappedAction], js.UndefOr[js.Any], js.Function2[S, WrapObj[P], WrapObj[P]]]
 
     @JSImport("react-redux", JSImport.Namespace)
     @js.native
@@ -45,14 +45,14 @@ object ReactRedux {
 
   }
 
-  type Connector[S, A, P] = Function2[S, Redux.Dispatcher[A], P]
+  type Connector[S, A, P] = Function2[S, Redux.Dispatcher[Redux.WrappedAction], P]
 
   def connect[S, A, P, C <: ReactClass[P, _, _, Element]](connector: Connector[S, A, P])(cls: C): C = {
-    def mkConnector(dispatch: Redux.Dispatcher[A]): js.Function2[S, WrapObj[P], WrapObj[P]] =
+    def mkConnector(dispatch: Redux.Dispatcher[Redux.WrappedAction]): js.Function2[S, WrapObj[P], WrapObj[P]] =
       (state: S, _: WrapObj[P]) => WrapObj(connector(state, dispatch))
 
     val f: Impl.SelectorFactory[S, A, P] =
-      (dispatch: Redux.Dispatcher[A], _: js.UndefOr[js.Any]) => mkConnector(dispatch)
+      (dispatch: Redux.Dispatcher[Redux.WrappedAction], _: js.UndefOr[js.Any]) => mkConnector(dispatch)
 
     Impl.Funcs.connectAdvanced(f)(cls)
   }
