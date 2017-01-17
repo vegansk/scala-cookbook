@@ -8,7 +8,22 @@ object Redux {
 
   type StateGetter[S] = js.Function0[S]
 
+  @js.native
+  trait WrappedAction extends js.Object {
+    val `type`: String = js.native
+    val scalaJsReduxAction: js.Any = js.native
+  }
+
+  object WrappedAction {
+    def apply[A](a: A) = js.Dynamic.literal(
+      `type` = "scalaJsReduxAction",
+      scalaJsReduxAction = a.asInstanceOf[js.Any]
+    ).asInstanceOf[WrappedAction]
+  }
+
   type Dispatcher[A] = js.Function1[A, js.Any]
+
+  type RawDispatcher = Dispatcher[WrappedAction | js.Object]
 
   @js.native
   trait MiddlewareArg[S, A] extends js.Object {
@@ -23,15 +38,9 @@ object Redux {
   type Unsubscriber = js.Function0[Unit]
 
   @js.native
-  trait WrappedAction extends js.Object {
-    val `type`: String = js.native
-    val scalaJsReduxAction: js.Any = js.native
-  }
-
-  @js.native
   trait Store[S, A] extends js.Object {
     val getState: StateGetter[S] = js.native
-    val dispatch: Dispatcher[WrappedAction | js.Object] = js.native
+    val dispatch: RawDispatcher = js.native
     val subscribe: js.Function1[Listener, Unsubscriber] = js.native
     val replaceReducer: js.Function1[Reducer[S, A], Unit] = js.native
   }
@@ -46,13 +55,6 @@ object Redux {
       initialState: js.UndefOr[S] = js.undefined,
       enhancer: js.UndefOr[Enhancer[S, A | js.Object]] = js.undefined
     ): Store[S, A] = js.native
-  }
-
-  object WrappedAction {
-    def apply[A](a: A) = js.Dynamic.literal(
-      `type` = "scalaJsReduxAction",
-      scalaJsReduxAction = a.asInstanceOf[js.Any]
-    ).asInstanceOf[WrappedAction]
   }
 
   def wrapReducer[S, A](r: Reducer[S, A]): Reducer[S, A | js.Object] =

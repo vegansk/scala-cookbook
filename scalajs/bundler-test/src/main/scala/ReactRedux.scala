@@ -1,5 +1,6 @@
 import scala.scalajs.js
 import js.annotation._
+import js.|
 
 import japgolly.scalajs.react._
 import org.scalajs.dom
@@ -22,12 +23,12 @@ object ReactRedux {
         ).asInstanceOf[ProviderProps]
     }
 
-    type SelectorFactory[S, A, P] = js.Function2[Redux.Dispatcher[Redux.WrappedAction], js.UndefOr[js.Any], js.Function2[S, WrapObj[P], WrapObj[P]]]
+    type SelectorFactory[S, P] = js.Function2[Redux.RawDispatcher, js.UndefOr[js.Any], js.Function2[S, WrapObj[P], WrapObj[P]]]
 
     @JSImport("react-redux", JSImport.Namespace)
     @js.native
     object Funcs extends js.Object {
-      def connectAdvanced[S, A, P, C <: ReactClass[P, _, _, Element]](selectorFactory: SelectorFactory[S, A, P]): js.Function1[C, C] = js.native
+      def connectAdvanced[S, P, C <: ReactClass[P, _, _, Element]](selectorFactory: SelectorFactory[S, P]): js.Function1[C, C] = js.native
     }
 
     @JSImport("react-redux", "Provider")
@@ -45,16 +46,22 @@ object ReactRedux {
 
   }
 
-  type Connector[S, A, P] = Function2[S, Redux.Dispatcher[Redux.WrappedAction], P]
+  type RawConnector[S, P] = Function2[S, Redux.RawDispatcher, P]
 
-  def connect[S, A, P, C <: ReactClass[P, _, _, Element]](connector: Connector[S, A, P])(cls: C): C = {
-    def mkConnector(dispatch: Redux.Dispatcher[Redux.WrappedAction]): js.Function2[S, WrapObj[P], WrapObj[P]] =
+  type Connector[S, A, P] = Function2[S, Redux.Dispatcher[A], P]
+
+  def connectRaw[S, P, C <: ReactClass[P, _, _, Element]](connector: RawConnector[S, P])(cls: C): C = {
+    def mkConnector(dispatch: Redux.RawDispatcher): js.Function2[S, WrapObj[P], WrapObj[P]] =
       (state: S, _: WrapObj[P]) => WrapObj(connector(state, dispatch))
 
-    val f: Impl.SelectorFactory[S, A, P] =
-      (dispatch: Redux.Dispatcher[Redux.WrappedAction], _: js.UndefOr[js.Any]) => mkConnector(dispatch)
+    val f: Impl.SelectorFactory[S, P] =
+      (dispatch: Redux.RawDispatcher, _: js.UndefOr[js.Any]) => mkConnector(dispatch)
 
     Impl.Funcs.connectAdvanced(f)(cls)
   }
 
+  def connect[S, A, P, C <: ReactClass[P, _, _, Element]](connector: Connector[S, A, P])(cls: C): C = {
+    val raw: RawConnector[S, P] = (s, d) => connector(s, (a: A) => d(Redux.createAction(a)))
+    connectRaw(raw)(cls)
+  }
 }

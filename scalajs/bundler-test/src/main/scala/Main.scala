@@ -32,7 +32,7 @@ object App {
 
     val factory = React.createFactory(
       ReactRedux.connect(
-        (s: State, d: Redux.Dispatcher[Redux.WrappedAction]) => Props(s.counter)
+        (s: State, d: Redux.RawDispatcher) => Props(s.counter)
       )(component.reactClass)
     )
 
@@ -55,10 +55,10 @@ object App {
 
     def apply(value: String, onClick: () => Unit) = component(Props(value, onClick))
 
-    def connected(value: String, click: Redux.Dispatcher[Redux.WrappedAction] => Unit) =
+    def connected(value: String, click: Redux.Dispatcher[Action] => Unit) =
       React.createFactory(
         ReactRedux.connect(
-          (s: State, d: Redux.Dispatcher[Redux.WrappedAction]) => Props(
+          (s: State, d: Redux.Dispatcher[Action]) => Props(
             value = value,
             onClick = () => click(d)
           )
@@ -72,8 +72,8 @@ object App {
       <.div()(
         StateDisplay.connected(0),
         <.br(),
-        Button.connected("-", d => d(Redux.createAction(Decrease))),
-        Button.connected("+", d => d(Redux.createAction(Increase)))
+        Button.connected("-", d => d(Decrease)),
+        Button.connected("+", d => d(Increase))
       )
     )
 
