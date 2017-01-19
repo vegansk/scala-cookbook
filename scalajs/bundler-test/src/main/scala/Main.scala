@@ -63,15 +63,17 @@ object App {
 
   }
 
-  def apply(store: Redux.Store[State, Action]) =
-    ReactRedux.Provider(store)(
-      <.div()(
-        StateDisplay.connected(0),
-        <.br(),
-        Button.connected("-", d => d(Decrease)),
-        Button.connected("+", d => d(Increase))
-      )
+  def apply(store: Redux.Store[State, Action]) = {
+    val ch: List[TagMod] = List(
+      StateDisplay.connected(0),
+      <.br(),
+      Button.connected("-", d => d(Decrease)),
+      Button.connected("+", d => d(Increase))
     )
+    ReactRedux.Provider(store)(
+      <.div()(ch: _*)
+    )
+  }
 
 }
 
